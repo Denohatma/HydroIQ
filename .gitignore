@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+venv/
+.venv/
+*.db
+
+# Node
+node_modules/
+.next/
+.turbo/
+out/
+
+# Environment
+.env
+.env.local
+.env*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data files (large binaries)
+Pipeline/
+PFS template/
+
+# Reference docs
+*.docx
+*.xlsx
+*.pdf
+*.png
