@@ -46,6 +46,7 @@ export interface Project {
   npv_usd?: number;
   irr_pct?: number;
   payback_years?: number;
+  dscr?: number;
   recommendation?: string;
   fdc_data?: FDCPoint[];
   sensitivity_results?: SensitivityResult[];

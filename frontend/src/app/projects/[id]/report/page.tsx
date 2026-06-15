@@ -515,8 +515,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
 
             <SubHeading number="4.3" title="Flow Duration Curve" />
 
-            {/* FDC Chart */}
-            {p.fdc_data && p.fdc_data.length > 0 && (
+            {(p.fdc_data?.length ?? 0) > 0 ? (
               <Card className="border-slate-200 mb-4 avoid-break">
                 <CardHeader><CardTitle className="text-sm text-slate-600">Figure 1: Flow Duration Curve (FDC)</CardTitle></CardHeader>
                 <CardContent>
@@ -546,7 +545,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
                   </p>
                 </CardContent>
               </Card>
-            )}
+            ) : null}
 
             <SubHeading number="4.4" title="Key Hydrological Parameters" />
             <p className="text-xs text-slate-500 italic mb-2">Table 3: Flow Statistics</p>
