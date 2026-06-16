@@ -35,3 +35,4 @@ PFS template/
 *.xlsx
 *.pdf
 *.png
+.vercel

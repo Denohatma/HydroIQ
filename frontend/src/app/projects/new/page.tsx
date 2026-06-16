@@ -125,7 +125,7 @@ export default function NewProjectPage() {
     <div className="min-h-screen">
       {/* Header */}
       <div className="border-b border-slate-200 bg-white">
-        <div className="mx-auto max-w-3xl px-6 py-6">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 py-4 sm:py-6">
           <Link
             href="/"
             className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
@@ -133,16 +133,16 @@ export default function NewProjectPage() {
             <ArrowLeft className="h-4 w-4" />
             Back to Dashboard
           </Link>
-          <div className="mt-4 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50">
-              <Droplets className="h-5 w-5 text-teal-600" />
+          <div className="mt-3 sm:mt-4 flex items-center gap-3">
+            <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-lg bg-teal-50 shrink-0">
+              <Droplets className="h-4 w-4 sm:h-5 sm:w-5 text-teal-600" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
                 New Pre-Feasibility Study
               </h1>
-              <p className="text-sm text-slate-500">
-                Define the basic parameters for a new hydropower site assessment
+              <p className="text-xs sm:text-sm text-slate-500">
+                Define basic parameters for a new hydropower site assessment
               </p>
             </div>
           </div>
@@ -150,7 +150,7 @@ export default function NewProjectPage() {
       </div>
 
       {/* Form */}
-      <div className="mx-auto max-w-3xl px-6 py-8">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 py-6 sm:py-8">
         <Card>
           <CardHeader>
             <CardTitle>Project Details</CardTitle>

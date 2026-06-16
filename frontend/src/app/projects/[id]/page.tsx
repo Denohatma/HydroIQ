@@ -117,7 +117,8 @@ function PhaseStepper({
 }) {
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between mb-2">
+      {/* Desktop stepper */}
+      <div className="hidden sm:flex items-center justify-between mb-2">
         {PHASES.map((p, idx) => {
           const Icon = p.icon;
           const isCompleted = p.num < completedUpTo;
@@ -170,6 +171,47 @@ function PhaseStepper({
                 />
               )}
             </div>
+          );
+        })}
+      </div>
+      {/* Mobile stepper - compact grid */}
+      <div className="grid grid-cols-7 gap-1 sm:hidden mb-2">
+        {PHASES.map((p) => {
+          const Icon = p.icon;
+          const isCompleted = p.num < completedUpTo;
+          const isCurrent = p.num === currentPhase;
+          const isAccessible = p.num <= completedUpTo;
+
+          return (
+            <button
+              key={p.num}
+              onClick={() => isAccessible && onSelect(p.num)}
+              disabled={!isAccessible}
+              className={`flex flex-col items-center gap-0.5 py-1 ${
+                isAccessible ? "cursor-pointer" : "cursor-not-allowed opacity-40"
+              }`}
+            >
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${
+                  isCompleted
+                    ? "bg-teal-600 border-teal-600 text-white"
+                    : isCurrent
+                    ? "bg-blue-900 border-blue-900 text-white ring-2 ring-blue-200"
+                    : "bg-white border-gray-300 text-gray-400"
+                }`}
+              >
+                {isCompleted ? (
+                  <CheckCircle className="w-3.5 h-3.5" />
+                ) : (
+                  <Icon className="w-3.5 h-3.5" />
+                )}
+              </div>
+              <span className={`text-[8px] font-medium text-center leading-tight ${
+                isCurrent ? "text-blue-900" : isCompleted ? "text-teal-700" : "text-gray-400"
+              }`}>
+                P{p.num}
+              </span>
+            </button>
           );
         })}
       </div>
@@ -739,37 +781,39 @@ export default function ProjectPage({
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
-      <header className="bg-gradient-to-r from-blue-950 to-teal-800 text-white px-6 py-4 shadow-lg">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div>
-            <p className="text-xs uppercase tracking-widest text-blue-200 mb-0.5">
-              HydroIQ Pre-Feasibility Study
-            </p>
-            <h1 className="text-2xl font-bold">{project.name}</h1>
-            <p className="text-sm text-blue-200 mt-0.5">
-              {project.country}
-              {project.region ? ` - ${project.region}` : ""}
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <Badge
-              variant={project.status === "complete" ? "default" : "secondary"}
-              className={
-                project.status === "complete"
-                  ? "bg-teal-500 text-white"
-                  : "bg-blue-800 text-blue-100"
-              }
-            >
-              {project.status}
-            </Badge>
-            <Badge variant="outline" className="border-blue-400 text-blue-200">
-              Phase {project.current_phase} / 7
-            </Badge>
+      <header className="bg-gradient-to-r from-blue-950 to-teal-800 text-white px-4 sm:px-6 py-4 shadow-lg">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div>
+              <p className="text-[10px] sm:text-xs uppercase tracking-widest text-blue-200 mb-0.5">
+                HydroIQ Pre-Feasibility Study
+              </p>
+              <h1 className="text-lg sm:text-2xl font-bold leading-tight">{project.name}</h1>
+              <p className="text-xs sm:text-sm text-blue-200 mt-0.5">
+                {project.country}
+                {project.region ? ` - ${project.region}` : ""}
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge
+                variant={project.status === "complete" ? "default" : "secondary"}
+                className={`text-[10px] sm:text-xs ${
+                  project.status === "complete"
+                    ? "bg-teal-500 text-white"
+                    : "bg-blue-800 text-blue-100"
+                }`}
+              >
+                {project.status}
+              </Badge>
+              <Badge variant="outline" className="border-blue-400 text-blue-200 text-[10px] sm:text-xs">
+                Phase {project.current_phase} / 7
+              </Badge>
+            </div>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-6 py-8 space-y-6">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8 space-y-4 sm:space-y-6">
         {/* Error banner */}
         {error && (
           <Alert variant="destructive">
@@ -795,7 +839,7 @@ export default function ProjectPage({
           value={activeTab}
           onValueChange={(v) => setActiveTab(v as string)}
         >
-          <TabsList variant="line" className="w-full flex-wrap h-auto gap-0">
+          <TabsList variant="line" className="w-full overflow-x-auto flex-nowrap h-auto gap-0 no-scrollbar">
             {PHASES.map((p) => {
               const Icon = p.icon;
               const isAccessible = p.num <= completedUpTo;
@@ -804,10 +848,10 @@ export default function ProjectPage({
                   key={p.num}
                   value={`phase-${p.num}`}
                   disabled={!isAccessible}
-                  className="gap-1.5 px-3 py-2"
+                  className="gap-1 sm:gap-1.5 px-2 sm:px-3 py-2 shrink-0"
                 >
                   <Icon className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">P{p.num}</span>
+                  <span className="text-xs sm:text-sm">P{p.num}</span>
                 </TabsTrigger>
               );
             })}
@@ -1322,38 +1366,38 @@ export default function ProjectPage({
                 {project.installed_capacity_kw != null && (
                   <>
                     <Separator />
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-4 text-white">
-                        <p className="text-xs uppercase tracking-wide text-blue-200">
+                    <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                      <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-3 sm:p-4 text-white">
+                        <p className="text-[10px] sm:text-xs uppercase tracking-wide text-blue-200">
                           Installed Capacity
                         </p>
-                        <p className="text-2xl font-bold mt-1">
+                        <p className="text-lg sm:text-2xl font-bold mt-1">
                           {fmt(project.installed_capacity_kw, 0)}
                         </p>
-                        <p className="text-xs text-blue-300">kW</p>
+                        <p className="text-[10px] sm:text-xs text-blue-300">kW</p>
                       </div>
-                      <div className="bg-gradient-to-br from-teal-700 to-teal-600 rounded-lg p-4 text-white">
-                        <p className="text-xs uppercase tracking-wide text-teal-200">
+                      <div className="bg-gradient-to-br from-teal-700 to-teal-600 rounded-lg p-3 sm:p-4 text-white">
+                        <p className="text-[10px] sm:text-xs uppercase tracking-wide text-teal-200">
                           Annual Energy
                         </p>
-                        <p className="text-2xl font-bold mt-1">
+                        <p className="text-lg sm:text-2xl font-bold mt-1">
                           {fmt(project.annual_energy_mwh, 0)}
                         </p>
-                        <p className="text-xs text-teal-300">MWh/yr</p>
+                        <p className="text-[10px] sm:text-xs text-teal-300">MWh/yr</p>
                       </div>
-                      <div className="bg-gradient-to-br from-indigo-700 to-indigo-600 rounded-lg p-4 text-white">
-                        <p className="text-xs uppercase tracking-wide text-indigo-200">
+                      <div className="bg-gradient-to-br from-indigo-700 to-indigo-600 rounded-lg p-3 sm:p-4 text-white">
+                        <p className="text-[10px] sm:text-xs uppercase tracking-wide text-indigo-200">
                           Turbine Type
                         </p>
-                        <p className="text-xl font-bold mt-1">
+                        <p className="text-base sm:text-xl font-bold mt-1">
                           {project.turbine_type ?? "--"}
                         </p>
                       </div>
-                      <div className="bg-gradient-to-br from-cyan-700 to-cyan-600 rounded-lg p-4 text-white">
-                        <p className="text-xs uppercase tracking-wide text-cyan-200">
+                      <div className="bg-gradient-to-br from-cyan-700 to-cyan-600 rounded-lg p-3 sm:p-4 text-white">
+                        <p className="text-[10px] sm:text-xs uppercase tracking-wide text-cyan-200">
                           Capacity Factor
                         </p>
-                        <p className="text-2xl font-bold mt-1">
+                        <p className="text-lg sm:text-2xl font-bold mt-1">
                           {project.capacity_factor != null
                             ? fmt(project.capacity_factor * 100, 1) + "%"
                             : "--"}
@@ -1843,46 +1887,46 @@ export default function ProjectPage({
                 {project.lcoe_usd_mwh != null && (
                   <>
                     <Separator />
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                      <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-4 text-white text-center">
-                        <p className="text-[10px] uppercase tracking-wide text-blue-200">
+                    <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 sm:gap-4">
+                      <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-2.5 sm:p-4 text-white text-center">
+                        <p className="text-[9px] sm:text-[10px] uppercase tracking-wide text-blue-200">
                           LCOE
                         </p>
-                        <p className="text-xl font-bold mt-1">
+                        <p className="text-base sm:text-xl font-bold mt-1">
                           ${fmt(project.lcoe_usd_mwh, 1)}
                         </p>
-                        <p className="text-[10px] text-blue-300">/MWh</p>
+                        <p className="text-[9px] sm:text-[10px] text-blue-300">/MWh</p>
                       </div>
-                      <div className="bg-gradient-to-br from-teal-700 to-teal-600 rounded-lg p-4 text-white text-center">
-                        <p className="text-[10px] uppercase tracking-wide text-teal-200">
+                      <div className="bg-gradient-to-br from-teal-700 to-teal-600 rounded-lg p-2.5 sm:p-4 text-white text-center">
+                        <p className="text-[9px] sm:text-[10px] uppercase tracking-wide text-teal-200">
                           NPV
                         </p>
-                        <p className="text-xl font-bold mt-1">
+                        <p className="text-base sm:text-xl font-bold mt-1">
                           {fmtUsd(project.npv_usd)}
                         </p>
                       </div>
-                      <div className="bg-gradient-to-br from-indigo-700 to-indigo-600 rounded-lg p-4 text-white text-center">
-                        <p className="text-[10px] uppercase tracking-wide text-indigo-200">
+                      <div className="bg-gradient-to-br from-indigo-700 to-indigo-600 rounded-lg p-2.5 sm:p-4 text-white text-center">
+                        <p className="text-[9px] sm:text-[10px] uppercase tracking-wide text-indigo-200">
                           IRR
                         </p>
-                        <p className="text-xl font-bold mt-1">
+                        <p className="text-base sm:text-xl font-bold mt-1">
                           {project.irr_pct != null
                             ? fmt(project.irr_pct, 1) + "%"
                             : "--"}
                         </p>
                       </div>
-                      <div className="bg-gradient-to-br from-cyan-700 to-cyan-600 rounded-lg p-4 text-white text-center">
-                        <p className="text-[10px] uppercase tracking-wide text-cyan-200">
+                      <div className="bg-gradient-to-br from-cyan-700 to-cyan-600 rounded-lg p-2.5 sm:p-4 text-white text-center">
+                        <p className="text-[9px] sm:text-[10px] uppercase tracking-wide text-cyan-200">
                           Payback
                         </p>
-                        <p className="text-xl font-bold mt-1">
+                        <p className="text-base sm:text-xl font-bold mt-1">
                           {project.payback_years != null
                             ? fmt(project.payback_years, 1)
                             : "--"}
                         </p>
-                        <p className="text-[10px] text-cyan-300">years</p>
+                        <p className="text-[9px] sm:text-[10px] text-cyan-300">years</p>
                       </div>
-                      <div className="bg-gradient-to-br from-purple-700 to-purple-600 rounded-lg p-4 text-white text-center">
+                      <div className="bg-gradient-to-br from-purple-700 to-purple-600 rounded-lg p-2.5 sm:p-4 text-white text-center">
                         <p className="text-[10px] uppercase tracking-wide text-purple-200">
                           DSCR
                         </p>

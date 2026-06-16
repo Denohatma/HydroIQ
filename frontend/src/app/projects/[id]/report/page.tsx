@@ -177,15 +177,15 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
         }
       `}</style>
 
-      <div className="min-h-screen bg-slate-50 py-8 px-4 print:bg-white print:py-0">
+      <div className="min-h-screen bg-slate-50 py-4 sm:py-8 px-2 sm:px-4 print:bg-white print:py-0">
         {/* Navigation */}
-        <div className="no-print mx-auto max-w-4xl mb-6 flex items-center justify-between">
+        <div className="no-print mx-auto max-w-4xl mb-4 sm:mb-6 flex items-center justify-between px-2">
           <Link href={`/projects/${id}`}>
-            <Button variant="outline" size="sm"><ArrowLeft className="size-4 mr-1.5" />Back to Project</Button>
+            <Button variant="outline" size="sm"><ArrowLeft className="size-4 mr-1.5" /><span className="hidden sm:inline">Back to Project</span><span className="sm:hidden">Back</span></Button>
           </Link>
           <div className="flex gap-2">
             <Button size="sm" className="bg-teal-700 text-white hover:bg-teal-800" onClick={() => window.print()}>
-              <Printer className="size-4 mr-1.5" />Print / Save PDF
+              <Printer className="size-4 mr-1.5" /><span className="hidden sm:inline">Print / Save PDF</span><span className="sm:hidden">PDF</span>
             </Button>
           </div>
         </div>
@@ -195,48 +195,53 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
           {/* ════════════════════════════════════════════════════════════ */}
           {/*  PAGE 1: COVER PAGE                                       */}
           {/* ════════════════════════════════════════════════════════════ */}
-          <div className="bg-gradient-to-br from-slate-800 via-slate-900 to-teal-900 px-10 py-16 text-white min-h-[60vh] flex flex-col justify-between">
-            <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-teal-300 font-semibold mb-1">
-                African Centre for Energy and Natural Resources
+          <div className="relative px-6 sm:px-10 py-12 sm:py-16 text-slate-800 min-h-[60vh] flex flex-col justify-between border-b-4 border-teal-700 bg-white">
+            {/* Top accent bar */}
+            <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-600" />
+
+            <div className="mt-4">
+              <p className="text-xs uppercase tracking-[0.3em] text-teal-700 font-semibold mb-1">
+                AfCEN &mdash; Africa&apos;s Infrastructure Intelligence Layer
               </p>
-              <p className="text-xs uppercase tracking-[0.2em] text-slate-400 mb-8">
-                AfCEN/HPF/001 &mdash; Hydropower Pre-Feasibility Framework
+              <p className="text-xs uppercase tracking-[0.15em] text-slate-400 mb-10">
+                Hydropower Pre-Feasibility Framework &bull; {docRef}
               </p>
 
-              <h1 className="text-4xl font-bold leading-tight tracking-tight mb-3">
-                Pre-Feasibility Study Report
+              <h1 className="text-3xl sm:text-4xl font-bold leading-tight tracking-tight text-slate-900 mb-2">
+                Pre-Feasibility Study
               </h1>
-              <h2 className="text-2xl font-light text-teal-200 mb-8">{p.name}</h2>
+              <h2 className="text-xl sm:text-2xl font-light text-teal-700 mb-10">{p.name}</h2>
 
-              <div className="grid grid-cols-2 gap-x-10 gap-y-4 text-sm max-w-lg">
+              <Separator className="mb-6" />
+
+              <div className="grid grid-cols-2 gap-x-8 sm:gap-x-10 gap-y-5 text-sm max-w-lg">
                 <div>
-                  <span className="text-teal-300 text-xs uppercase tracking-wide">Country</span>
-                  <p className="font-semibold text-lg">{p.country}</p>
+                  <span className="text-slate-400 text-[10px] uppercase tracking-wide font-medium">Country</span>
+                  <p className="font-semibold text-base sm:text-lg text-slate-800">{p.country}</p>
                 </div>
                 <div>
-                  <span className="text-teal-300 text-xs uppercase tracking-wide">Region</span>
-                  <p className="font-semibold text-lg">{p.region || "--"}</p>
+                  <span className="text-slate-400 text-[10px] uppercase tracking-wide font-medium">Region</span>
+                  <p className="font-semibold text-base sm:text-lg text-slate-800">{p.region || "--"}</p>
                 </div>
                 <div>
-                  <span className="text-teal-300 text-xs uppercase tracking-wide">Project Type</span>
-                  <p className="font-medium capitalize">{str(p.project_type).replace(/_/g, "-")}</p>
+                  <span className="text-slate-400 text-[10px] uppercase tracking-wide font-medium">Project Type</span>
+                  <p className="font-medium capitalize text-slate-700">{str(p.project_type).replace(/_/g, "-")}</p>
                 </div>
                 <div>
-                  <span className="text-teal-300 text-xs uppercase tracking-wide">Capacity Class</span>
-                  <p className="font-medium capitalize">{str(p.capacity_class)}</p>
+                  <span className="text-slate-400 text-[10px] uppercase tracking-wide font-medium">Capacity Class</span>
+                  <p className="font-medium capitalize text-slate-700">{str(p.capacity_class)}</p>
                 </div>
               </div>
             </div>
 
-            <div className="flex items-end justify-between text-xs text-slate-400 border-t border-white/10 pt-4 mt-8">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between text-xs text-slate-400 border-t border-slate-200 pt-4 mt-8 gap-2">
               <div>
-                <p>Document Reference: {docRef}</p>
+                <p className="text-slate-500 font-medium">Document Reference: {docRef}</p>
                 <p>Revision: 1.0 &mdash; {today}</p>
               </div>
-              <div className="text-right">
-                <p>Generated by HydroIQ Platform</p>
-                <p>AfCEN Pre-Feasibility Assessment Tool</p>
+              <div className="sm:text-right">
+                <p className="text-slate-500 font-medium">AfCEN &mdash; Africa&apos;s Infrastructure Intelligence Layer</p>
+                <p>HydroIQ Pre-Feasibility Assessment Tool</p>
               </div>
             </div>
           </div>
@@ -244,7 +249,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
           {/* ════════════════════════════════════════════════════════════ */}
           {/*  PAGE 2: DOCUMENT CONTROL & ABBREVIATIONS                 */}
           {/* ════════════════════════════════════════════════════════════ */}
-          <div className="px-10 py-8 text-sm leading-relaxed text-slate-700 page-break">
+          <div className="px-6 sm:px-10 py-8 text-sm leading-relaxed text-slate-700 page-break">
             <h2 className="text-lg font-bold text-slate-800 mb-4">Document Control</h2>
             <Table>
               <TableBody>
@@ -258,10 +263,38 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
               </TableBody>
             </Table>
 
+            <h2 className="text-lg font-bold text-slate-800 mt-8 mb-4">Revision History</h2>
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-slate-50">
+                  <TableHead>Role</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-medium text-slate-600">Developed by</TableCell>
+                  <TableCell>HydroIQ</TableCell>
+                  <TableCell><Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[10px]">Complete</Badge></TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium text-slate-600">Quality Assurance</TableCell>
+                  <TableCell>Jagath</TableCell>
+                  <TableCell><Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[10px]">Reviewed</Badge></TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium text-slate-600">Approved by</TableCell>
+                  <TableCell>Dennis</TableCell>
+                  <TableCell><Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[10px]">Approved</Badge></TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+
             <h2 className="text-lg font-bold text-slate-800 mt-8 mb-4">Abbreviations</h2>
             <div className="grid grid-cols-2 gap-x-6 text-xs text-slate-600">
               {[
-                ["AfCEN","African Centre for Energy and Natural Resources"],
+                ["AfCEN","Africa's Infrastructure Intelligence Layer"],
                 ["CAPEX","Capital Expenditure"],
                 ["CF","Capacity Factor"],
                 ["DEM","Digital Elevation Model"],
@@ -294,7 +327,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
           {/* ════════════════════════════════════════════════════════════ */}
           {/*  PAGE 3: TABLE OF CONTENTS                                */}
           {/* ════════════════════════════════════════════════════════════ */}
-          <div className="px-10 py-8 text-sm page-break">
+          <div className="px-6 sm:px-10 py-8 text-sm page-break">
             <h2 className="text-lg font-bold text-slate-800 mb-6">Table of Contents</h2>
             <div className="space-y-2">
               {[
@@ -336,7 +369,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
           {/* ════════════════════════════════════════════════════════════ */}
           {/*  REPORT CONTENT                                           */}
           {/* ════════════════════════════════════════════════════════════ */}
-          <div className="px-10 py-8 space-y-2 text-sm leading-relaxed text-slate-700">
+          <div className="px-6 sm:px-10 py-8 space-y-2 text-sm leading-relaxed text-slate-700">
 
             {/* ── SECTION 1: EXECUTIVE SUMMARY (Pages 4-5) ── */}
             <SectionHeading number="1" title="Executive Summary" />
@@ -395,10 +428,11 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
 
             <SubHeading number="2.1" title="Study Objectives" />
             <p className="text-slate-600 mb-3">
-              This pre-feasibility study aims to assess the technical, environmental, and financial viability of
+              This pre-feasibility study assesses the technical, environmental, and financial viability of
               the {p.name} hydropower project in {p.country}. The study follows the standardised AfCEN
-              Hydropower Pre-Feasibility Framework (AfCEN/HPF/001, June 2026) which provides a systematic
-              7-phase assessment methodology for hydropower projects across Africa.
+              Hydropower Pre-Feasibility Framework (AfCEN/HPF/001, June 2026), a systematic
+              7-phase assessment methodology for hydropower projects across Africa developed by
+              AfCEN &mdash; Africa&apos;s Infrastructure Intelligence Layer.
             </p>
             <p className="text-slate-600 mb-3">The specific objectives of this study are to:</p>
             <ol className="list-decimal list-inside space-y-1 text-slate-600 ml-4">
@@ -476,7 +510,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
             </Card>
 
             <SubHeading number="3.2" title="Catchment Characteristics" />
-            <div className="grid grid-cols-3 gap-3 mb-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
               <MetricCard label="Catchment Area" value={fmtNumber(p.catchment_area_km2, 1)} unit="km²" />
               <MetricCard label="Mean Elevation" value={s.site_description?.mean_elevation ? fmtNumber(s.site_description.mean_elevation, 0) : "--"} unit="m.a.s.l." />
               <MetricCard label="Average Slope" value={s.site_description?.avg_slope ? fmtNumber(s.site_description.avg_slope, 1) : "--"} unit="%" />
@@ -506,7 +540,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
               meteorological forcing data (precipitation, temperature, PET) to predict daily streamflow.
               The model is trained on gauged African catchments and transferred to the target site.
             </p>
-            <div className="grid grid-cols-4 gap-3 mb-6">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
               <MetricCard label="ML Approach" value={str(s.hydrology?.ml_approach)} />
               <MetricCard label="NSE Score" value={p.nse_score ? fmtNumber(p.nse_score, 3) : "N/A"} highlight={!!p.nse_score && p.nse_score >= 0.6} />
               <MetricCard label="Ensemble Size" value={str(s.hydrology?.ensemble_size)} />
@@ -624,7 +658,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
             </Card>
 
             <SubHeading number="5.3" title="Energy Generation Performance" />
-            <div className="grid grid-cols-3 gap-4 mb-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-4">
               <MetricCard label="Installed Capacity" value={fmtNumber((p.installed_capacity_kw || 0) / 1000, 2)} unit="MW" highlight />
               <MetricCard label="Annual Energy" value={fmtNumber((p.annual_energy_mwh || 0) / 1000, 2)} unit="GWh/yr" highlight />
               <MetricCard label="Capacity Factor" value={p.capacity_factor ? fmtPct(p.capacity_factor * 100) : "--"} />
@@ -817,7 +851,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
             <SubHeading number="8.2" title="Key Financial Indicators" />
             <p className="text-xs text-slate-500 italic mb-2">Table 8: Financial Indicators</p>
 
-            <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-6">
               <MetricCard label="LCOE" value={p.lcoe_usd_mwh ? `$${fmtNumber(p.lcoe_usd_mwh, 1)}` : "--"} unit="USD/MWh" highlight />
               <MetricCard label="NPV" value={fmtCurrency(p.npv_usd)} highlight />
               <MetricCard label="IRR" value={p.irr_pct ? fmtPct(p.irr_pct) : "--"} highlight />
@@ -1016,7 +1050,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
                 is required before any investment decisions are made.
               </p>
               <p className="mt-4">Document Reference: {docRef} | Generated: {today} | HydroIQ Platform v1.0</p>
-              <p>&copy; {new Date().getFullYear()} African Centre for Energy and Natural Resources (AfCEN)</p>
+              <p>&copy; {new Date().getFullYear()} AfCEN &mdash; Africa&apos;s Infrastructure Intelligence Layer</p>
             </div>
           </div>
         </div>
