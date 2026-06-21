@@ -10,10 +10,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased">
       <head>
-        <title>HydroIQ — AfCEN Hydropower Pre-Feasibility Platform</title>
+        <title>HydroDev — AfCEN Hydropower Development Platform</title>
         <meta
           name="description"
-          content="AfCEN Hydropower Pre-Feasibility Study Platform for Africa"
+          content="AfCEN Hydropower Development Platform for Africa"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -37,10 +37,10 @@ export default function RootLayout({
                   className="text-base font-bold tracking-tight text-[#d3a54a]"
                   style={{ fontFamily: "'Space Grotesk', sans-serif" }}
                 >
-                  HYDROIQ
+                  HYDRODEV
                 </span>
               </Link>
-              <div className="flex items-center gap-0.5 text-[10px] font-mono overflow-x-auto no-scrollbar">
+              <div className="flex items-center gap-0.5 text-xs font-mono overflow-x-auto no-scrollbar">
                 <Link
                   href="/"
                   className="px-2.5 py-1 rounded text-[#94a3b8] hover:text-white hover:bg-white/5 transition-colors uppercase tracking-wider whitespace-nowrap"
@@ -61,7 +61,7 @@ export default function RootLayout({
                 </Link>
               </div>
             </div>
-            <span className="hidden lg:block text-[9px] font-mono text-[#475569] uppercase tracking-[0.15em] shrink-0">
+            <span className="hidden lg:block text-[11px] font-mono text-[#475569] uppercase tracking-[0.15em] shrink-0">
               AfCEN &middot; Africa&apos;s Infrastructure Intelligence Layer
             </span>
           </div>

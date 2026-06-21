@@ -29,7 +29,7 @@ function StatusPill({ value }: { value?: string | null }) {
     STATUS_LABELS[value || "not_started"] ?? STATUS_LABELS.not_started;
   return (
     <span
-      className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded"
+      className="text-[11px] font-mono uppercase px-1.5 py-0.5 rounded"
       style={{ backgroundColor: `${cfg.color}15`, color: cfg.color }}
     >
       {cfg.label}
@@ -42,7 +42,7 @@ function TimelinePill({ value }: { value?: string | null }) {
     TIMELINE_LABELS[value || "on_time"] ?? TIMELINE_LABELS.on_time;
   return (
     <span
-      className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded border"
+      className="text-[11px] font-mono uppercase px-1.5 py-0.5 rounded border"
       style={{
         backgroundColor: `${cfg.color}15`,
         color: cfg.color,
@@ -91,7 +91,7 @@ function DataBar({ score }: { score: number }) {
           style={{ width: `${pct}%`, backgroundColor: color }}
         />
       </div>
-      <span className="text-[9px] font-mono" style={{ color }}>
+      <span className="text-[11px] font-mono" style={{ color }}>
         {pct}%
       </span>
     </div>
@@ -119,15 +119,15 @@ function ProjectTable({
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   {showRank && (
-                    <span className="text-[10px] font-mono text-[#d3a54a]">
+                    <span className="text-xs font-mono text-[#d3a54a]">
                       #{idx + 1}
                     </span>
                   )}
-                  <p className="font-mono text-xs text-white truncate">
+                  <p className="font-mono text-sm text-white truncate">
                     {project.name}
                   </p>
                 </div>
-                <p className="text-[10px] font-mono text-[#475569] mt-0.5">
+                <p className="text-xs font-mono text-[#475569] mt-0.5">
                   {project.country}
                   {project.total_capex_usd
                     ? ` · ${formatCurrency(project.total_capex_usd)}`
@@ -139,7 +139,7 @@ function ProjectTable({
             <div className="mt-1.5">
               <DataBar score={dataCompletenessScore(project)} />
             </div>
-            <div className="grid grid-cols-3 gap-2 text-[9px] font-mono mt-2">
+            <div className="grid grid-cols-3 gap-2 text-[11px] font-mono mt-2">
               <div>
                 <span className="text-[#475569]">FS:</span>{" "}
                 <StatusPill value={project.feasibility_status} />
@@ -163,41 +163,41 @@ function ProjectTable({
           <thead>
             <tr className="border-b border-[#d3a54a]/10">
               {showRank && (
-                <th className="text-left text-[10px] font-mono uppercase tracking-wider text-[#d3a54a]/60 px-3 py-2.5 font-medium w-8">
+                <th className="text-left text-xs font-mono uppercase tracking-wider text-[#d3a54a]/60 px-3 py-2.5 font-medium w-8">
                   #
                 </th>
               )}
-              <th className="text-left text-[10px] font-mono uppercase tracking-wider text-[#d3a54a]/60 px-3 py-2.5 font-medium">
+              <th className="text-left text-xs font-mono uppercase tracking-wider text-[#d3a54a]/60 px-3 py-2.5 font-medium">
                 Project
               </th>
-              <th className="text-left text-[10px] font-mono uppercase tracking-wider text-[#d3a54a]/60 px-3 py-2.5 font-medium">
+              <th className="text-left text-xs font-mono uppercase tracking-wider text-[#d3a54a]/60 px-3 py-2.5 font-medium">
                 Country
               </th>
-              <th className="text-center text-[10px] font-mono uppercase tracking-wider text-[#d3a54a]/60 px-3 py-2.5 font-medium w-24">
+              <th className="text-center text-xs font-mono uppercase tracking-wider text-[#d3a54a]/60 px-3 py-2.5 font-medium w-24">
                 Data
               </th>
-              <th className="text-center text-[10px] font-mono uppercase tracking-wider text-[#d3a54a]/60 px-3 py-2.5 font-medium">
+              <th className="text-center text-xs font-mono uppercase tracking-wider text-[#d3a54a]/60 px-3 py-2.5 font-medium">
                 Feasibility
               </th>
-              <th className="text-center text-[10px] font-mono uppercase tracking-wider text-[#d3a54a]/60 px-3 py-2.5 font-medium">
+              <th className="text-center text-xs font-mono uppercase tracking-wider text-[#d3a54a]/60 px-3 py-2.5 font-medium">
                 Fin. Model
               </th>
-              <th className="text-center text-[10px] font-mono uppercase tracking-wider text-[#d3a54a]/60 px-3 py-2.5 font-medium">
+              <th className="text-center text-xs font-mono uppercase tracking-wider text-[#d3a54a]/60 px-3 py-2.5 font-medium">
                 EPC
               </th>
-              <th className="text-center text-[10px] font-mono uppercase tracking-wider text-[#d3a54a]/60 px-3 py-2.5 font-medium">
+              <th className="text-center text-xs font-mono uppercase tracking-wider text-[#d3a54a]/60 px-3 py-2.5 font-medium">
                 Equity
               </th>
-              <th className="text-center text-[10px] font-mono uppercase tracking-wider text-[#d3a54a]/60 px-3 py-2.5 font-medium">
+              <th className="text-center text-xs font-mono uppercase tracking-wider text-[#d3a54a]/60 px-3 py-2.5 font-medium">
                 Debt
               </th>
-              <th className="text-center text-[10px] font-mono uppercase tracking-wider text-[#d3a54a]/60 px-3 py-2.5 font-medium">
+              <th className="text-center text-xs font-mono uppercase tracking-wider text-[#d3a54a]/60 px-3 py-2.5 font-medium">
                 FC Date
               </th>
-              <th className="text-center text-[10px] font-mono uppercase tracking-wider text-[#d3a54a]/60 px-3 py-2.5 font-medium">
+              <th className="text-center text-xs font-mono uppercase tracking-wider text-[#d3a54a]/60 px-3 py-2.5 font-medium">
                 Timeline
               </th>
-              <th className="text-left text-[10px] font-mono uppercase tracking-wider text-[#d3a54a]/60 px-3 py-2.5 font-medium">
+              <th className="text-left text-xs font-mono uppercase tracking-wider text-[#d3a54a]/60 px-3 py-2.5 font-medium">
                 Lead
               </th>
               <th className="w-10" />
@@ -210,24 +210,24 @@ function ProjectTable({
                 className="hover:bg-[#162236]/50 transition-colors group"
               >
                 {showRank && (
-                  <td className="px-3 py-2 font-mono text-[10px] text-[#d3a54a]/40">
+                  <td className="px-3 py-2 font-mono text-xs text-[#d3a54a]/40">
                     {idx + 1}
                   </td>
                 )}
                 <td className="px-3 py-2">
                   <Link
                     href={`/projects/${project.id}`}
-                    className="font-mono text-[11px] text-white hover:text-[#d3a54a] transition-colors"
+                    className="font-mono text-sm text-white hover:text-[#d3a54a] transition-colors"
                   >
                     {project.name}
                   </Link>
                   {project.total_capex_usd ? (
-                    <span className="ml-2 text-[9px] font-mono text-[#64748b]">
+                    <span className="ml-2 text-[11px] font-mono text-[#64748b]">
                       {formatCurrency(project.total_capex_usd)}
                     </span>
                   ) : null}
                 </td>
-                <td className="px-3 py-2 font-mono text-[11px] text-[#94a3b8]">
+                <td className="px-3 py-2 font-mono text-sm text-[#94a3b8]">
                   {project.country}
                 </td>
                 <td className="px-3 py-2 w-24">
@@ -248,13 +248,13 @@ function ProjectTable({
                 <td className="px-3 py-2 text-center">
                   <StatusPill value={project.debt_status} />
                 </td>
-                <td className="px-3 py-2 text-center font-mono text-[10px] text-[#94a3b8]">
+                <td className="px-3 py-2 text-center font-mono text-xs text-[#94a3b8]">
                   {project.potential_fc_date || "—"}
                 </td>
                 <td className="px-3 py-2 text-center">
                   <TimelinePill value={project.timeline_status} />
                 </td>
-                <td className="px-3 py-2 font-mono text-[10px] text-[#94a3b8]">
+                <td className="px-3 py-2 font-mono text-xs text-[#94a3b8]">
                   {project.project_lead || "—"}
                 </td>
                 <td className="px-3 py-2 text-right">
@@ -323,7 +323,7 @@ export default function PipelinePage() {
         {/* Header */}
         <div className="flex items-center gap-3 mb-5">
           <div className="h-px flex-1 bg-[#d3a54a]/20" />
-          <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#d3a54a]">
+          <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#d3a54a]">
             AfCEN Project Pipeline
           </span>
           <div className="h-px flex-1 bg-[#d3a54a]/20" />
@@ -341,7 +341,7 @@ export default function PipelinePage() {
             <p className="text-xs font-mono text-red-400">{error}</p>
             <button
               onClick={loadProjects}
-              className="mt-3 text-[10px] font-mono uppercase text-[#d3a54a] hover:text-[#e8c36a]"
+              className="mt-3 text-xs font-mono uppercase text-[#d3a54a] hover:text-[#e8c36a]"
             >
               &#8635; Retry
             </button>
@@ -356,11 +356,11 @@ export default function PipelinePage() {
                   <span className="text-xs font-mono uppercase tracking-wider text-[#22c55e]">
                     Approved Projects
                   </span>
-                  <span className="text-[10px] font-mono text-[#475569]">
+                  <span className="text-xs font-mono text-[#475569]">
                     ({approved.length})
                   </span>
                   {approvedValue > 0 && (
-                    <span className="text-[10px] font-mono text-[#22c55e]/60 ml-1">
+                    <span className="text-xs font-mono text-[#22c55e]/60 ml-1">
                       Portfolio: {formatCurrency(approvedValue)}
                     </span>
                   )}
@@ -371,7 +371,7 @@ export default function PipelinePage() {
                 <ProjectTable projects={approved} showRank={false} />
               ) : (
                 <div className="flex items-center justify-center py-12">
-                  <span className="text-[10px] font-mono text-[#475569]">
+                  <span className="text-xs font-mono text-[#475569]">
                     NO APPROVED PROJECTS YET
                   </span>
                 </div>
@@ -386,13 +386,13 @@ export default function PipelinePage() {
                   <span className="text-xs font-mono uppercase tracking-wider text-[#d3a54a]">
                     Projects in Entry
                   </span>
-                  <span className="text-[10px] font-mono text-[#475569]">
+                  <span className="text-xs font-mono text-[#475569]">
                     ({entry.length})
                   </span>
                 </div>
                 <Link
                   href="/projects/new"
-                  className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-[#d3a54a] hover:text-[#e8c36a] transition-colors"
+                  className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-[#d3a54a] hover:text-[#e8c36a] transition-colors"
                 >
                   + New Study
                 </Link>
@@ -402,7 +402,7 @@ export default function PipelinePage() {
                 <ProjectTable projects={entry} showRank={true} />
               ) : (
                 <div className="flex items-center justify-center py-12">
-                  <span className="text-[10px] font-mono text-[#475569]">
+                  <span className="text-xs font-mono text-[#475569]">
                     NO PROJECTS IN ENTRY
                   </span>
                 </div>
@@ -410,7 +410,7 @@ export default function PipelinePage() {
             </div>
 
             {/* Bottom Summary */}
-            <div className="border border-[#1a2744] rounded-md px-4 py-2 flex items-center gap-6 text-[10px] font-mono text-[#475569] overflow-x-auto no-scrollbar bg-[#111c2e]">
+            <div className="border border-[#1a2744] rounded-md px-4 py-2 flex items-center gap-6 text-xs font-mono text-[#475569] overflow-x-auto no-scrollbar bg-[#111c2e]">
               <span>
                 TOTAL:{" "}
                 <span className="text-[#94a3b8]">{projects.length}</span>{" "}

@@ -113,7 +113,7 @@ export default function DashboardPage() {
         {/* Section Divider */}
         <div className="flex items-center gap-3 mb-5">
           <div className="h-px flex-1 bg-[#d3a54a]/20" />
-          <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#d3a54a]">
+          <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#d3a54a]">
             Pipeline Overview
           </span>
           <div className="h-px flex-1 bg-[#d3a54a]/20" />
@@ -171,13 +171,13 @@ export default function DashboardPage() {
               <span className="text-xs font-mono uppercase tracking-wider text-[#d3a54a]">
                 Project Pipeline
               </span>
-              <span className="text-[10px] font-mono text-[#475569]">
+              <span className="text-xs font-mono text-[#475569]">
                 ({projects.length})
               </span>
             </div>
             <Link
               href="/projects/new"
-              className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-[#d3a54a] hover:text-[#e8c36a] transition-colors"
+              className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-[#d3a54a] hover:text-[#e8c36a] transition-colors"
             >
               <PlusCircle className="h-3 w-3" />
               New Study
@@ -196,7 +196,7 @@ export default function DashboardPage() {
               <p className="text-xs font-mono text-red-400">{error}</p>
               <button
                 onClick={loadProjects}
-                className="mt-3 text-[10px] font-mono uppercase tracking-wider text-[#d3a54a] hover:text-[#e8c36a]"
+                className="mt-3 text-xs font-mono uppercase tracking-wider text-[#d3a54a] hover:text-[#e8c36a]"
               >
                 &#8635; Retry
               </button>
@@ -226,10 +226,10 @@ export default function DashboardPage() {
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
-                        <p className="font-mono text-xs text-white truncate">
+                        <p className="font-mono text-sm text-white truncate">
                           {project.name}
                         </p>
-                        <p className="text-[10px] font-mono text-[#475569] mt-0.5">
+                        <p className="text-xs font-mono text-[#475569] mt-0.5">
                           {project.country} &middot;{" "}
                           {phaseLabels[project.current_phase] ??
                             `P${project.current_phase}`}
@@ -248,7 +248,7 @@ export default function DashboardPage() {
                         </button>
                       </div>
                     </div>
-                    <div className="flex items-center gap-4 mt-1.5 text-[10px] font-mono text-[#64748b]">
+                    <div className="flex items-center gap-4 mt-1.5 text-xs font-mono text-[#64748b]">
                       <span>
                         CAP:{" "}
                         {formatNum(project.installed_capacity_kw, 0)} kW
@@ -275,28 +275,28 @@ export default function DashboardPage() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-[#d3a54a]/10">
-                      <th className="text-left text-[10px] font-mono uppercase tracking-wider text-[#d3a54a]/60 px-4 py-2.5 font-medium">
+                      <th className="text-left text-xs font-mono uppercase tracking-wider text-[#d3a54a]/60 px-4 py-2.5 font-medium">
                         Project
                       </th>
-                      <th className="text-left text-[10px] font-mono uppercase tracking-wider text-[#d3a54a]/60 px-4 py-2.5 font-medium">
+                      <th className="text-left text-xs font-mono uppercase tracking-wider text-[#d3a54a]/60 px-4 py-2.5 font-medium">
                         Country
                       </th>
-                      <th className="text-left text-[10px] font-mono uppercase tracking-wider text-[#d3a54a]/60 px-4 py-2.5 font-medium">
+                      <th className="text-left text-xs font-mono uppercase tracking-wider text-[#d3a54a]/60 px-4 py-2.5 font-medium">
                         Phase
                       </th>
-                      <th className="text-left text-[10px] font-mono uppercase tracking-wider text-[#d3a54a]/60 px-4 py-2.5 font-medium">
+                      <th className="text-left text-xs font-mono uppercase tracking-wider text-[#d3a54a]/60 px-4 py-2.5 font-medium">
                         Status
                       </th>
-                      <th className="text-right text-[10px] font-mono uppercase tracking-wider text-[#d3a54a]/60 px-4 py-2.5 font-medium">
+                      <th className="text-right text-xs font-mono uppercase tracking-wider text-[#d3a54a]/60 px-4 py-2.5 font-medium">
                         Cap (kW)
                       </th>
-                      <th className="text-right text-[10px] font-mono uppercase tracking-wider text-[#d3a54a]/60 px-4 py-2.5 font-medium">
+                      <th className="text-right text-xs font-mono uppercase tracking-wider text-[#d3a54a]/60 px-4 py-2.5 font-medium">
                         LCOE ($/MWh)
                       </th>
-                      <th className="text-right text-[10px] font-mono uppercase tracking-wider text-[#d3a54a]/60 px-4 py-2.5 font-medium">
+                      <th className="text-right text-xs font-mono uppercase tracking-wider text-[#d3a54a]/60 px-4 py-2.5 font-medium">
                         CAPEX
                       </th>
-                      <th className="text-center text-[10px] font-mono uppercase tracking-wider text-[#d3a54a]/60 px-4 py-2.5 font-medium">
+                      <th className="text-center text-xs font-mono uppercase tracking-wider text-[#d3a54a]/60 px-4 py-2.5 font-medium">
                         Rec
                       </th>
                       <th className="w-16" />
@@ -311,30 +311,30 @@ export default function DashboardPage() {
                         <td className="px-4 py-2">
                           <Link
                             href={`/projects/${project.id}`}
-                            className="font-mono text-[11px] text-white hover:text-[#d3a54a] transition-colors"
+                            className="font-mono text-sm text-white hover:text-[#d3a54a] transition-colors"
                           >
                             {project.name}
                           </Link>
                         </td>
-                        <td className="px-4 py-2 font-mono text-[11px] text-[#94a3b8]">
+                        <td className="px-4 py-2 font-mono text-sm text-[#94a3b8]">
                           {project.country}
                         </td>
-                        <td className="px-4 py-2 font-mono text-[11px] text-[#94a3b8]">
+                        <td className="px-4 py-2 font-mono text-sm text-[#94a3b8]">
                           {phaseLabels[project.current_phase] ??
                             `Phase ${project.current_phase}`}
                         </td>
                         <td className="px-4 py-2">
                           <StatusBadge status={project.status} />
                         </td>
-                        <td className="px-4 py-2 text-right font-mono text-[11px] text-[#e2e8f0]">
+                        <td className="px-4 py-2 text-right font-mono text-sm text-[#e2e8f0]">
                           {formatNum(project.installed_capacity_kw, 0)}
                         </td>
-                        <td className="px-4 py-2 text-right font-mono text-[11px] text-[#e2e8f0]">
+                        <td className="px-4 py-2 text-right font-mono text-sm text-[#e2e8f0]">
                           {project.lcoe_usd_mwh
                             ? `$${formatNum(project.lcoe_usd_mwh)}`
                             : "—"}
                         </td>
-                        <td className="px-4 py-2 text-right font-mono text-[11px] text-[#e2e8f0]">
+                        <td className="px-4 py-2 text-right font-mono text-sm text-[#e2e8f0]">
                           {project.total_capex_usd
                             ? formatCurrency(project.total_capex_usd)
                             : "—"}
@@ -369,7 +369,7 @@ export default function DashboardPage() {
 
           {/* Bottom Ticker */}
           {!loading && projects.length > 0 && (
-            <div className="border-t border-[#1a2744] px-4 py-2 flex items-center gap-6 text-[10px] font-mono text-[#475569] overflow-x-auto no-scrollbar">
+            <div className="border-t border-[#1a2744] px-4 py-2 flex items-center gap-6 text-xs font-mono text-[#475569] overflow-x-auto no-scrollbar">
               <span>
                 TOTAL:{" "}
                 <span className="text-[#94a3b8]">{projects.length}</span>{" "}
@@ -424,7 +424,7 @@ function StatBox({
       />
       <div className="flex items-center gap-2 mb-3">
         <span style={{ color: accentColor }}>{icon}</span>
-        <span className="text-[10px] font-mono uppercase tracking-wider text-[#64748b]">
+        <span className="text-xs font-mono uppercase tracking-wider text-[#64748b]">
           {label}
         </span>
       </div>
@@ -442,7 +442,7 @@ function StatBox({
           {formatCurrency(money)}
         </div>
       )}
-      <div className="text-[10px] text-[#475569] mt-1 font-mono">
+      <div className="text-xs text-[#475569] mt-1 font-mono">
         {subtitle}
       </div>
     </div>
@@ -467,7 +467,7 @@ function StatusBadge({ status }: { status: string }) {
   const c = config[status] ?? config.draft;
   return (
     <span
-      className={`text-[9px] font-mono uppercase px-1.5 py-0.5 rounded ${c.className}`}
+      className={`text-[11px] font-mono uppercase px-1.5 py-0.5 rounded ${c.className}`}
     >
       {c.label}
     </span>
@@ -477,7 +477,7 @@ function StatusBadge({ status }: { status: string }) {
 function RecBadge({ rec }: { rec?: string | null }) {
   if (!rec)
     return (
-      <span className="text-[10px] font-mono text-[#475569]">&mdash;</span>
+      <span className="text-xs font-mono text-[#475569]">&mdash;</span>
     );
 
   const config: Record<string, { label: string; className: string }> = {
@@ -500,12 +500,12 @@ function RecBadge({ rec }: { rec?: string | null }) {
   const c = config[rec];
   if (!c)
     return (
-      <span className="text-[10px] font-mono text-[#475569]">&mdash;</span>
+      <span className="text-xs font-mono text-[#475569]">&mdash;</span>
     );
 
   return (
     <span
-      className={`text-[9px] font-mono px-1.5 py-0.5 rounded border ${c.className}`}
+      className={`text-[11px] font-mono px-1.5 py-0.5 rounded border ${c.className}`}
     >
       {c.label}
     </span>
