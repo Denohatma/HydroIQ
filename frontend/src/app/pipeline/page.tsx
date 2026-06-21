@@ -1,35 +1,61 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { Loader2, ArrowRight, CheckCircle2, Clock } from "lucide-react";
+import {
+  Loader2,
+  ArrowRight,
+  CheckCircle2,
+  Clock,
+  ChevronDown,
+} from "lucide-react";
 import { api, type Project } from "@/lib/api";
 
-const STATUS_LABELS: Record<string, { label: string; color: string }> = {
+const STATUS_OPTIONS: Record<string, { label: string; color: string }> = {
   not_started: { label: "NOT STARTED", color: "#475569" },
   in_progress: { label: "IN PROGRESS", color: "#3b82f6" },
   completed: { label: "COMPLETE", color: "#22c55e" },
+};
+
+const EPC_OPTIONS: Record<string, { label: string; color: string }> = {
   not_secured: { label: "NOT SECURED", color: "#475569" },
   tendering: { label: "TENDERING", color: "#f59e0b" },
   secured: { label: "SECURED", color: "#22c55e" },
-  fundraising: { label: "FUNDRAISING", color: "#f59e0b" },
-  partially_secured: { label: "PARTIAL", color: "#f59e0b" },
-  mandated: { label: "MANDATED", color: "#3b82f6" },
-  term_sheet: { label: "TERM SHEET", color: "#8b5cf6" },
 };
 
-const TIMELINE_LABELS: Record<string, { label: string; color: string }> = {
+const EQUITY_OPTIONS: Record<string, { label: string; color: string }> = {
+  not_secured: { label: "NOT SECURED", color: "#475569" },
+  fundraising: { label: "FUNDRAISING", color: "#f59e0b" },
+  partially_secured: { label: "PARTIAL", color: "#f59e0b" },
+  secured: { label: "SECURED", color: "#22c55e" },
+};
+
+const DEBT_OPTIONS: Record<string, { label: string; color: string }> = {
+  not_secured: { label: "NOT SECURED", color: "#475569" },
+  mandated: { label: "MANDATED", color: "#3b82f6" },
+  term_sheet: { label: "TERM SHEET", color: "#8b5cf6" },
+  secured: { label: "SECURED", color: "#22c55e" },
+};
+
+const TIMELINE_OPTIONS: Record<string, { label: string; color: string }> = {
   on_time: { label: "ON TIME", color: "#22c55e" },
   delayed: { label: "DELAYED", color: "#ef4444" },
   on_hold: { label: "ON HOLD", color: "#f59e0b" },
 };
 
+const ALL_STATUS: Record<string, { label: string; color: string }> = {
+  ...STATUS_OPTIONS,
+  ...EPC_OPTIONS,
+  ...EQUITY_OPTIONS,
+  ...DEBT_OPTIONS,
+  ...TIMELINE_OPTIONS,
+};
+
 function StatusPill({ value }: { value?: string | null }) {
-  const cfg =
-    STATUS_LABELS[value || "not_started"] ?? STATUS_LABELS.not_started;
+  const cfg = ALL_STATUS[value || "not_started"] ?? ALL_STATUS.not_started;
   return (
     <span
-      className="text-[11px] font-mono uppercase px-1.5 py-0.5 rounded"
+      className="text-[11px] font-mono uppercase px-1.5 py-0.5 rounded whitespace-nowrap"
       style={{ backgroundColor: `${cfg.color}15`, color: cfg.color }}
     >
       {cfg.label}
@@ -39,10 +65,10 @@ function StatusPill({ value }: { value?: string | null }) {
 
 function TimelinePill({ value }: { value?: string | null }) {
   const cfg =
-    TIMELINE_LABELS[value || "on_time"] ?? TIMELINE_LABELS.on_time;
+    TIMELINE_OPTIONS[value || "on_time"] ?? TIMELINE_OPTIONS.on_time;
   return (
     <span
-      className="text-[11px] font-mono uppercase px-1.5 py-0.5 rounded border"
+      className="text-[11px] font-mono uppercase px-1.5 py-0.5 rounded border whitespace-nowrap"
       style={{
         backgroundColor: `${cfg.color}15`,
         color: cfg.color,
@@ -51,6 +77,135 @@ function TimelinePill({ value }: { value?: string | null }) {
     >
       {cfg.label}
     </span>
+  );
+}
+
+function EditableSelect({
+  value,
+  options,
+  onSave,
+}: {
+  value: string;
+  options: Record<string, { label: string; color: string }>;
+  onSave: (val: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node))
+        setOpen(false);
+    }
+    if (open) document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [open]);
+
+  const cfg = options[value] ?? Object.values(options)[0];
+
+  return (
+    <div ref={ref} className="relative inline-block">
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setOpen(!open);
+        }}
+        className="flex items-center gap-1 group/edit cursor-pointer"
+      >
+        <span
+          className="text-[11px] font-mono uppercase px-1.5 py-0.5 rounded whitespace-nowrap"
+          style={{ backgroundColor: `${cfg.color}15`, color: cfg.color }}
+        >
+          {cfg.label}
+        </span>
+        <ChevronDown className="h-2.5 w-2.5 text-[#475569] opacity-0 group-hover/edit:opacity-100 transition-opacity" />
+      </button>
+
+      {open && (
+        <div className="absolute z-50 top-full left-0 mt-1 bg-[#0f1b2b] border border-[#1a2744] rounded shadow-xl min-w-[140px]">
+          {Object.entries(options).map(([key, opt]) => (
+            <button
+              key={key}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onSave(key);
+                setOpen(false);
+              }}
+              className={`w-full text-left px-3 py-1.5 text-[11px] font-mono uppercase hover:bg-[#162236] transition-colors flex items-center gap-2 ${
+                key === value ? "bg-[#162236]" : ""
+              }`}
+            >
+              <span
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ backgroundColor: opt.color }}
+              />
+              <span style={{ color: opt.color }}>{opt.label}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function EditableText({
+  value,
+  placeholder,
+  onSave,
+}: {
+  value: string;
+  placeholder: string;
+  onSave: (val: string) => void;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [text, setText] = useState(value);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (editing && inputRef.current) inputRef.current.focus();
+  }, [editing]);
+
+  if (!editing) {
+    return (
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setText(value);
+          setEditing(true);
+        }}
+        className="font-mono text-xs text-[#94a3b8] hover:text-white transition-colors cursor-pointer text-left"
+      >
+        {value || <span className="text-[#475569]">{placeholder}</span>}
+      </button>
+    );
+  }
+
+  return (
+    <input
+      ref={inputRef}
+      value={text}
+      onChange={(e) => setText(e.target.value)}
+      onBlur={() => {
+        if (text !== value) onSave(text);
+        setEditing(false);
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          if (text !== value) onSave(text);
+          setEditing(false);
+        }
+        if (e.key === "Escape") {
+          setText(value);
+          setEditing(false);
+        }
+      }}
+      onClick={(e) => e.stopPropagation()}
+      className="bg-[#0b1220] border border-[#d3a54a]/40 rounded px-1.5 py-0.5 text-xs font-mono text-white w-24 outline-none focus:border-[#d3a54a]"
+      placeholder={placeholder}
+    />
   );
 }
 
@@ -101,19 +256,20 @@ function DataBar({ score }: { score: number }) {
 function ProjectTable({
   projects,
   showRank,
+  onUpdate,
 }: {
   projects: Project[];
   showRank: boolean;
+  onUpdate: (id: number, field: string, value: string) => void;
 }) {
   return (
     <>
       {/* Mobile Cards */}
       <div className="lg:hidden divide-y divide-[#1a2744]">
         {projects.map((project, idx) => (
-          <Link
+          <div
             key={project.id}
-            href={`/projects/${project.id}`}
-            className="block px-4 py-3 hover:bg-[#162236] transition-colors"
+            className="px-4 py-3 hover:bg-[#162236] transition-colors"
           >
             <div className="flex items-start justify-between gap-2 mb-2">
               <div className="flex-1 min-w-0">
@@ -123,9 +279,12 @@ function ProjectTable({
                       #{idx + 1}
                     </span>
                   )}
-                  <p className="font-mono text-sm text-white truncate">
+                  <Link
+                    href={`/projects/${project.id}`}
+                    className="font-mono text-sm text-white hover:text-[#d3a54a] truncate"
+                  >
                     {project.name}
-                  </p>
+                  </Link>
                 </div>
                 <p className="text-xs font-mono text-[#475569] mt-0.5">
                   {project.country}
@@ -134,26 +293,44 @@ function ProjectTable({
                     : ""}
                 </p>
               </div>
-              <TimelinePill value={project.timeline_status} />
+              <EditableSelect
+                value={project.timeline_status || "on_time"}
+                options={TIMELINE_OPTIONS}
+                onSave={(v) => onUpdate(project.id, "timeline_status", v)}
+              />
             </div>
             <div className="mt-1.5">
               <DataBar score={dataCompletenessScore(project)} />
             </div>
             <div className="grid grid-cols-3 gap-2 text-[11px] font-mono mt-2">
-              <div>
-                <span className="text-[#475569]">FS:</span>{" "}
-                <StatusPill value={project.feasibility_status} />
+              <div className="flex items-center gap-1">
+                <span className="text-[#475569]">FS:</span>
+                <EditableSelect
+                  value={project.feasibility_status || "not_started"}
+                  options={STATUS_OPTIONS}
+                  onSave={(v) => onUpdate(project.id, "feasibility_status", v)}
+                />
               </div>
-              <div>
-                <span className="text-[#475569]">FM:</span>{" "}
-                <StatusPill value={project.financial_model_status} />
+              <div className="flex items-center gap-1">
+                <span className="text-[#475569]">FM:</span>
+                <EditableSelect
+                  value={project.financial_model_status || "not_started"}
+                  options={STATUS_OPTIONS}
+                  onSave={(v) =>
+                    onUpdate(project.id, "financial_model_status", v)
+                  }
+                />
               </div>
-              <div>
-                <span className="text-[#475569]">EPC:</span>{" "}
-                <StatusPill value={project.epc_status} />
+              <div className="flex items-center gap-1">
+                <span className="text-[#475569]">EPC:</span>
+                <EditableSelect
+                  value={project.epc_status || "not_secured"}
+                  options={EPC_OPTIONS}
+                  onSave={(v) => onUpdate(project.id, "epc_status", v)}
+                />
               </div>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
 
@@ -234,28 +411,68 @@ function ProjectTable({
                   <DataBar score={dataCompletenessScore(project)} />
                 </td>
                 <td className="px-3 py-2 text-center">
-                  <StatusPill value={project.feasibility_status} />
+                  <EditableSelect
+                    value={project.feasibility_status || "not_started"}
+                    options={STATUS_OPTIONS}
+                    onSave={(v) =>
+                      onUpdate(project.id, "feasibility_status", v)
+                    }
+                  />
                 </td>
                 <td className="px-3 py-2 text-center">
-                  <StatusPill value={project.financial_model_status} />
+                  <EditableSelect
+                    value={project.financial_model_status || "not_started"}
+                    options={STATUS_OPTIONS}
+                    onSave={(v) =>
+                      onUpdate(project.id, "financial_model_status", v)
+                    }
+                  />
                 </td>
                 <td className="px-3 py-2 text-center">
-                  <StatusPill value={project.epc_status} />
+                  <EditableSelect
+                    value={project.epc_status || "not_secured"}
+                    options={EPC_OPTIONS}
+                    onSave={(v) => onUpdate(project.id, "epc_status", v)}
+                  />
                 </td>
                 <td className="px-3 py-2 text-center">
-                  <StatusPill value={project.equity_status} />
+                  <EditableSelect
+                    value={project.equity_status || "not_secured"}
+                    options={EQUITY_OPTIONS}
+                    onSave={(v) => onUpdate(project.id, "equity_status", v)}
+                  />
                 </td>
                 <td className="px-3 py-2 text-center">
-                  <StatusPill value={project.debt_status} />
-                </td>
-                <td className="px-3 py-2 text-center font-mono text-xs text-[#94a3b8]">
-                  {project.potential_fc_date || "—"}
+                  <EditableSelect
+                    value={project.debt_status || "not_secured"}
+                    options={DEBT_OPTIONS}
+                    onSave={(v) => onUpdate(project.id, "debt_status", v)}
+                  />
                 </td>
                 <td className="px-3 py-2 text-center">
-                  <TimelinePill value={project.timeline_status} />
+                  <EditableText
+                    value={project.potential_fc_date || ""}
+                    placeholder="Set date"
+                    onSave={(v) =>
+                      onUpdate(project.id, "potential_fc_date", v)
+                    }
+                  />
                 </td>
-                <td className="px-3 py-2 font-mono text-xs text-[#94a3b8]">
-                  {project.project_lead || "—"}
+                <td className="px-3 py-2 text-center">
+                  <EditableSelect
+                    value={project.timeline_status || "on_time"}
+                    options={TIMELINE_OPTIONS}
+                    onSave={(v) =>
+                      onUpdate(project.id, "timeline_status", v)
+                    }
+                  />
+                </td>
+                <td className="px-3 py-2">
+                  <EditableText
+                    value={project.project_lead || ""}
+                    placeholder="Assign"
+                    onSave={(v) => onUpdate(project.id, "project_lead", v)}
+                  />
                 </td>
                 <td className="px-3 py-2 text-right">
                   <Link href={`/projects/${project.id}`}>
@@ -293,6 +510,17 @@ export default function PipelinePage() {
       );
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleUpdate(id: number, field: string, value: string) {
+    try {
+      const updated = await api.updatePipeline(id, { [field]: value });
+      setProjects((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, ...updated } : p))
+      );
+    } catch {
+      // silently fail — pill stays at old value
     }
   }
 
@@ -368,7 +596,11 @@ export default function PipelinePage() {
               </div>
 
               {approved.length > 0 ? (
-                <ProjectTable projects={approved} showRank={false} />
+                <ProjectTable
+                  projects={approved}
+                  showRank={false}
+                  onUpdate={handleUpdate}
+                />
               ) : (
                 <div className="flex items-center justify-center py-12">
                   <span className="text-xs font-mono text-[#475569]">
@@ -399,7 +631,11 @@ export default function PipelinePage() {
               </div>
 
               {entry.length > 0 ? (
-                <ProjectTable projects={entry} showRank={true} />
+                <ProjectTable
+                  projects={entry}
+                  showRank={true}
+                  onUpdate={handleUpdate}
+                />
               ) : (
                 <div className="flex items-center justify-center py-12">
                   <span className="text-xs font-mono text-[#475569]">
