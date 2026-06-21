@@ -150,4 +150,14 @@ class ProjectResponse(BaseModel):
     sensitivity_results: Optional[list] = None
     report_generated: bool = False
 
+    priority: Optional[int] = None
+    feasibility_status: Optional[str] = None
+    financial_model_status: Optional[str] = None
+    epc_status: Optional[str] = None
+    equity_status: Optional[str] = None
+    debt_status: Optional[str] = None
+    potential_fc_date: Optional[str] = None
+    timeline_status: Optional[str] = None
+    project_lead: Optional[str] = None
+
     model_config = {"from_attributes": True}

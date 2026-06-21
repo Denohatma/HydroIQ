@@ -51,6 +51,15 @@ export interface Project {
   fdc_data?: FDCPoint[];
   sensitivity_results?: SensitivityResult[];
   report_generated: boolean;
+  priority?: number;
+  feasibility_status?: string;
+  financial_model_status?: string;
+  epc_status?: string;
+  equity_status?: string;
+  debt_status?: string;
+  potential_fc_date?: string;
+  timeline_status?: string;
+  project_lead?: string;
 }
 
 export interface FDCPoint {
@@ -92,4 +101,7 @@ export const api = {
 
   getReport: (id: number) =>
     request<{ project: Project; report_sections: Record<string, Record<string, unknown>> }>(`/api/projects/${id}/report`),
+
+  updatePipeline: (id: number, data: Record<string, unknown>) =>
+    request<Project>(`/api/projects/${id}/pipeline`, { method: "PUT", body: JSON.stringify(data) }),
 };

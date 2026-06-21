@@ -116,3 +116,14 @@ class Project(Base):
     # Report
     report_generated = Column(Boolean, default=False)
     current_phase = Column(Integer, default=1)
+
+    # Pipeline Tracking
+    priority = Column(Integer)
+    feasibility_status = Column(String, default="not_started")  # not_started, in_progress, completed
+    financial_model_status = Column(String, default="not_started")
+    epc_status = Column(String, default="not_secured")  # not_secured, tendering, secured
+    equity_status = Column(String, default="not_started")  # not_started, fundraising, partially_secured, secured
+    debt_status = Column(String, default="not_started")  # not_started, mandated, term_sheet, secured
+    potential_fc_date = Column(String)  # target financial close date
+    timeline_status = Column(String, default="on_time")  # on_time, delayed, on_hold
+    project_lead = Column(String)

@@ -10,22 +10,20 @@ PIPELINE = [
      "lat":8.5,"lon":-11.8,"catch":100,"type":"run_of_river","cap":"large","gauge":"partial","head":60},
     {"name":"[GEN-003] Bekongor Dam (120MW Hydro)","country":"Cameroon","region":"Central Africa","description":"Type: Dam. 120MW. Sanaga River basin.",
      "lat":5.9,"lon":10.6,"catch":100,"type":"run_of_river","cap":"large","gauge":"partial","head":80},
-    {"name":"[GEN-004] Betmai I (Betmai Hydro)","country":"Kenya","region":"East Africa","description":"Type: Run-of-River. Small hydro.",
-     "lat":-0.5,"lon":37.3,"catch":100,"type":"run_of_river","cap":"small","gauge":"partial","head":50},
-    {"name":"[GEN-005] Betmai II","country":"Kenya","region":"East Africa","description":"Type: Run-of-River. Small hydro adjacent to Betmai I.",
-     "lat":-0.5,"lon":37.3,"catch":80,"type":"run_of_river","cap":"small","gauge":"partial","head":100},
-    {"name":"[GEN-009] Tiyapata I HPP","country":"Sierra Leone","region":"West Africa","description":"Type: Run-of-River. Small hydro.",
-     "lat":8.3,"lon":-11.5,"catch":50,"type":"run_of_river","cap":"small","gauge":"no","head":40},
-    {"name":"[GEN-010] Tiyapata II HPP","country":"Sierra Leone","region":"West Africa","description":"Type: Run-of-River. Small hydro.",
-     "lat":8.3,"lon":-11.5,"catch":50,"type":"run_of_river","cap":"small","gauge":"no","head":35},
+    {"name":"[GEN-004] Betmai I (Betmai Hydro)","country":"Sierra Leone","region":"West Africa","description":"Type: Run-of-River. Small hydro.",
+     "lat":8.5,"lon":-11.8,"catch":100,"type":"run_of_river","cap":"small","gauge":"partial","head":50},
+    {"name":"[GEN-005] Betmai II","country":"Sierra Leone","region":"West Africa","description":"Type: Run-of-River. Small hydro adjacent to Betmai I.",
+     "lat":8.5,"lon":-11.8,"catch":80,"type":"run_of_river","cap":"small","gauge":"partial","head":100},
+    {"name":"[GEN-009] Tiyapata I HPP","country":"Guinea","region":"West Africa","description":"Type: Run-of-River. Small hydro.",
+     "lat":9.5,"lon":-11.5,"catch":50,"type":"run_of_river","cap":"small","gauge":"no","head":40},
+    {"name":"[GEN-010] Tiyapata II HPP","country":"Guinea","region":"West Africa","description":"Type: Run-of-River. Small hydro.",
+     "lat":9.5,"lon":-11.5,"catch":50,"type":"run_of_river","cap":"small","gauge":"no","head":35},
     {"name":"[GEN-011] Cote d'Ivoire HPP (TBD)","country":"Côte d'Ivoire","region":"West Africa","description":"Type: TBD. Site identification pending.",
      "lat":6.8,"lon":-5.3,"catch":200,"type":"run_of_river","cap":"small","gauge":"no","head":30},
-    {"name":"[GEN-013] Luvia Cascade I–III (DRC)","country":"DRC","region":"Central Africa","description":"Type: Run-of-River. 3-site cascade. Katanga province.",
+    {"name":"[GEN-013] Luvua Cascade I–III (DRC)","country":"DRC","region":"Central Africa","description":"Type: Run-of-River. 3-site cascade. Katanga province.",
      "lat":-10.5,"lon":27.5,"catch":300,"type":"run_of_river","cap":"medium","gauge":"no","head":60},
     {"name":"[GEN-015] Tana River Cascade","country":"Kenya","region":"East Africa","description":"Type: Run-of-River. Multiple sites on Tana River.",
      "lat":-0.5,"lon":37.5,"catch":500,"type":"run_of_river","cap":"large","gauge":"no","head":40},
-    {"name":"[GEN-016] Makindu HPP","country":"Kenya","region":"East Africa","description":"Type: Run-of-River. Small hydro.",
-     "lat":-2.3,"lon":37.8,"catch":100,"type":"run_of_river","cap":"small","gauge":"no","head":30},
     {"name":"[GEN-018] Lake Malawi Damming","country":"Malawi","region":"Southern Africa","description":"Type: Dam. Large-scale Shire River outlet.",
      "lat":-14.3,"lon":35.2,"catch":1000,"type":"large","cap":"large","gauge":"no","head":20},
     {"name":"[GEN-019] Lake Malombe Pumped Storage","country":"Malawi","region":"Southern Africa","description":"Type: Pumped Storage.",
@@ -151,6 +149,12 @@ async def seed_if_empty(db: AsyncSession):
         p.penstock_length_m = proj.get("penstock")
         p.distance_to_load_km = proj.get("dist")
         p.current_phase = 3
+        p.feasibility_status = "in_progress"
+        p.financial_model_status = "not_started"
+        p.epc_status = "not_secured"
+        p.equity_status = "not_started"
+        p.debt_status = "not_started"
+        p.timeline_status = "on_time"
         db.add(p)
 
     for fp in FULL_PROJECTS:
@@ -238,6 +242,12 @@ async def seed_if_empty(db: AsyncSession):
         p.sensitivity_results = calculations.run_sensitivity(capex, om, energy, p7["tariff_usd_kwh"], p7["discount_rate_pct"], p7["project_life_years"])
         p.status = "completed"
         p.current_phase = 7
+        p.feasibility_status = "completed"
+        p.financial_model_status = "completed"
+        p.epc_status = "tendering"
+        p.equity_status = "fundraising"
+        p.debt_status = "not_started"
+        p.timeline_status = "on_time"
 
         db.add(p)
 
