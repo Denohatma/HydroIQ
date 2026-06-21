@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import Link from "next/link";
 import {
   Loader2,
@@ -10,6 +10,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { api, type Project } from "@/lib/api";
+import { formatCurrency } from "@/lib/format";
 
 const STATUS_OPTIONS: Record<string, { label: string; color: string }> = {
   not_started: { label: "NOT STARTED", color: "#475569" },
@@ -207,14 +208,6 @@ function EditableText({
       placeholder={placeholder}
     />
   );
-}
-
-function formatCurrency(value: number): string {
-  if (value >= 1_000_000_000)
-    return `$${(value / 1_000_000_000).toFixed(2)}B`;
-  if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`;
-  if (value >= 1_000) return `$${(value / 1_000).toFixed(0)}K`;
-  return `$${value.toFixed(0)}`;
 }
 
 function dataCompletenessScore(p: Project): number {
@@ -513,37 +506,30 @@ export default function PipelinePage() {
     }
   }
 
-  async function handleUpdate(id: number, field: string, value: string) {
+  const handleUpdate = useCallback(async (id: number, field: string, value: string) => {
+    setProjects((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, [field]: value } : p))
+    );
     try {
-      const updated = await api.updatePipeline(id, { [field]: value });
-      setProjects((prev) =>
-        prev.map((p) => (p.id === id ? { ...p, ...updated } : p))
-      );
+      await api.updatePipeline(id, { [field]: value });
     } catch {
-      // silently fail — pill stays at old value
+      loadProjects();
     }
-  }
+  }, []);
 
-  const approved = projects
-    .filter(
-      (p) =>
-        p.recommendation === "ADVANCE" ||
-        p.recommendation === "CONDITIONAL"
-    )
-    .sort((a, b) => dataCompletenessScore(b) - dataCompletenessScore(a));
-
-  const entry = projects
-    .filter(
-      (p) =>
-        p.recommendation !== "ADVANCE" &&
-        p.recommendation !== "CONDITIONAL"
-    )
-    .sort((a, b) => dataCompletenessScore(b) - dataCompletenessScore(a));
-
-  const approvedValue = approved.reduce(
-    (sum, p) => sum + (p.total_capex_usd || 0),
-    0
-  );
+  const { approved, entry, approvedValue } = useMemo(() => {
+    const ap = projects
+      .filter((p) => p.recommendation === "ADVANCE" || p.recommendation === "CONDITIONAL")
+      .sort((a, b) => dataCompletenessScore(b) - dataCompletenessScore(a));
+    const en = projects
+      .filter((p) => p.recommendation !== "ADVANCE" && p.recommendation !== "CONDITIONAL")
+      .sort((a, b) => dataCompletenessScore(b) - dataCompletenessScore(a));
+    return {
+      approved: ap,
+      entry: en,
+      approvedValue: ap.reduce((sum, p) => sum + (p.total_capex_usd || 0), 0),
+    };
+  }, [projects]);
 
   return (
     <div className="min-h-screen bg-[#0b1220]">

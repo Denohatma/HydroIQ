@@ -325,8 +325,6 @@ def run_sensitivity(
         irr = calculate_irr(capex, revenue * 1000, om, project_life)
         return {"lcoe": round(lcoe, 2), "npv": round(npv, 2), "irr": round(irr or 0, 2)}
 
-    base_revenue_per_mwh = base_tariff * 1000
-
     for label, factor in [("P10 (Low Flow)", 0.75), ("P50 (Base)", 1.0), ("P90 (High Flow)", 1.25)]:
         r = compute(base_capex, base_om, base_energy_mwh * factor, base_tariff, discount_rate)
         results.append({"parameter": "Flow Variability", "variation": label, **r})

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import {
   PlusCircle,
@@ -14,6 +14,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { api, type Project } from "@/lib/api";
+import { formatCurrency, formatNum, formatCapacity } from "@/lib/format";
 
 const phaseLabels: Record<number, string> = {
   0: "—",
@@ -25,27 +26,6 @@ const phaseLabels: Record<number, string> = {
   6: "Cost Est.",
   7: "Financial",
 };
-
-function formatNum(value: number | null | undefined, decimals = 1): string {
-  if (value === null || value === undefined) return "—";
-  return value.toLocaleString("en-US", {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
-  });
-}
-
-function formatCurrency(value: number): string {
-  if (value >= 1_000_000_000)
-    return `$${(value / 1_000_000_000).toFixed(2)}B`;
-  if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`;
-  if (value >= 1_000) return `$${(value / 1_000).toFixed(0)}K`;
-  return `$${value.toFixed(0)}`;
-}
-
-function formatCapacity(kw: number): string {
-  if (kw >= 1000) return `${(kw / 1000).toFixed(1)} MW`;
-  return `${kw.toFixed(0)} kW`;
-}
 
 export default function DashboardPage() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -71,7 +51,7 @@ export default function DashboardPage() {
     }
   }
 
-  async function handleDelete(id: number, name: string) {
+  const handleDelete = useCallback(async (id: number, name: string) => {
     if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
     try {
       await api.deleteProject(id);
@@ -79,33 +59,32 @@ export default function DashboardPage() {
     } catch (err) {
       alert(err instanceof Error ? err.message : "Failed to delete");
     }
-  }
+  }, []);
 
-  const inEntry = projects.filter((p) => p.status !== "completed");
-  const dataComplete = projects.filter((p) => p.current_phase >= 7);
-  const pfsComplete = projects.filter((p) => p.status === "completed");
-  const approved = projects.filter((p) => p.recommendation === "ADVANCE");
-  const conditional = projects.filter(
-    (p) => p.recommendation === "CONDITIONAL"
-  );
-  const approvedValue = approved.reduce(
-    (s, p) => s + (p.total_capex_usd || 0),
-    0
-  );
-  const conditionalValue = conditional.reduce(
-    (s, p) => s + (p.total_capex_usd || 0),
-    0
-  );
+  const stats = useMemo(() => {
+    const inEntry = projects.filter((p) => p.status !== "completed");
+    const dataComplete = projects.filter((p) => p.current_phase >= 7);
+    const pfsComplete = projects.filter((p) => p.status === "completed");
+    const approved = projects.filter((p) => p.recommendation === "ADVANCE");
+    const conditional = projects.filter((p) => p.recommendation === "CONDITIONAL");
+    return {
+      inEntry,
+      dataComplete,
+      pfsComplete,
+      approved,
+      conditional,
+      approvedValue: approved.reduce((s, p) => s + (p.total_capex_usd || 0), 0),
+      conditionalValue: conditional.reduce((s, p) => s + (p.total_capex_usd || 0), 0),
+      totalCapacity: projects.reduce((s, p) => s + (p.installed_capacity_kw || 0), 0),
+      totalInvestment: projects.reduce((s, p) => s + (p.total_capex_usd || 0), 0),
+      countries: new Set(projects.map((p) => p.country)),
+    };
+  }, [projects]);
 
-  const totalCapacity = projects.reduce(
-    (s, p) => s + (p.installed_capacity_kw || 0),
-    0
-  );
-  const totalInvestment = projects.reduce(
-    (s, p) => s + (p.total_capex_usd || 0),
-    0
-  );
-  const countries = new Set(projects.map((p) => p.country));
+  const {
+    inEntry, dataComplete, pfsComplete, approved, conditional,
+    approvedValue, conditionalValue, totalCapacity, totalInvestment, countries,
+  } = stats;
 
   return (
     <div className="min-h-screen bg-[#0b1220]">

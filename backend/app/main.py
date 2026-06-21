@@ -84,18 +84,12 @@ async def delete_project(project_id: int, db: AsyncSession = Depends(get_db)):
 # ── Pipeline Tracking ──
 
 @app.put("/api/projects/{project_id}/pipeline")
-async def update_pipeline(project_id: int, data: dict, db: AsyncSession = Depends(get_db)):
+async def update_pipeline(project_id: int, data: schemas.PipelineUpdate, db: AsyncSession = Depends(get_db)):
     project = await db.get(models.Project, project_id)
     if not project:
         raise HTTPException(404, "Project not found")
-    pipeline_fields = [
-        "priority", "feasibility_status", "financial_model_status",
-        "epc_status", "equity_status", "debt_status",
-        "potential_fc_date", "timeline_status", "project_lead",
-    ]
-    for key, val in data.items():
-        if key in pipeline_fields:
-            setattr(project, key, val)
+    for key, val in data.model_dump(exclude_none=True).items():
+        setattr(project, key, val)
     await db.commit()
     await db.refresh(project)
     return schemas.ProjectResponse.model_validate(project)
