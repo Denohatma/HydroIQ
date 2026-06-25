@@ -84,6 +84,9 @@ export const api = {
   getProject: (id: number) => request<Project>(`/api/projects/${id}`),
   deleteProject: (id: number) => request<{ ok: boolean }>(`/api/projects/${id}`, { method: "DELETE" }),
 
+  saveDraft: (id: number, data: Record<string, unknown>) =>
+    request<Project>(`/api/projects/${id}/draft`, { method: "PATCH", body: JSON.stringify(data) }),
+
   savePhase1: (id: number, data: Record<string, unknown>) =>
     request<Project>(`/api/projects/${id}/phase1`, { method: "PUT", body: JSON.stringify(data) }),
   savePhase2: (id: number, data: Record<string, unknown>) =>

@@ -81,6 +81,20 @@ async def delete_project(project_id: int, db: AsyncSession = Depends(get_db)):
     return {"ok": True}
 
 
+# ── Draft Save (auto-save without advancing phase) ──
+
+@app.patch("/api/projects/{project_id}/draft")
+async def draft_save(project_id: int, data: schemas.DraftSave, db: AsyncSession = Depends(get_db)):
+    project = await db.get(models.Project, project_id)
+    if not project:
+        raise HTTPException(404, "Project not found")
+    for key, val in data.model_dump(exclude_none=True).items():
+        setattr(project, key, val)
+    await db.commit()
+    await db.refresh(project)
+    return schemas.ProjectResponse.model_validate(project)
+
+
 # ── Pipeline Tracking ──
 
 @app.put("/api/projects/{project_id}/pipeline")

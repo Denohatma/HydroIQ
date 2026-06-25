@@ -109,6 +109,76 @@ class Phase7Input(BaseModel):
     debt_term_years: Optional[int] = Field(default=None, ge=1, le=30)
 
 
+class DraftSave(BaseModel):
+    # Phase 1
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    catchment_area_km2: Optional[float] = None
+    project_type: Optional[str] = None
+    capacity_class: Optional[str] = None
+    distance_to_load_km: Optional[float] = None
+    has_gauge_data: Optional[str] = None
+    gauge_years: Optional[float] = None
+    # Phase 2
+    dem_resolution_m: Optional[float] = None
+    gross_head_m: Optional[float] = None
+    mean_slope_pct: Optional[float] = None
+    elevation_mean_m: Optional[float] = None
+    stream_length_km: Optional[float] = None
+    penstock_length_m: Optional[float] = None
+    aridity_index: Optional[float] = None
+    forest_fraction: Optional[float] = None
+    soil_porosity: Optional[float] = None
+    soil_conductivity: Optional[float] = None
+    geological_permeability: Optional[float] = None
+    carbonate_rock_fraction: Optional[float] = None
+    # Phase 3
+    lstm_model_approach: Optional[str] = None
+    mean_annual_flow_m3s: Optional[float] = None
+    q10_m3s: Optional[float] = None
+    q40_m3s: Optional[float] = None
+    q50_m3s: Optional[float] = None
+    q90_m3s: Optional[float] = None
+    flow_cv: Optional[float] = None
+    nse_score: Optional[float] = None
+    ensemble_size: Optional[int] = None
+    simulation_years: Optional[int] = None
+    # Phase 4
+    design_flow_exceedance: Optional[str] = None
+    turbine_efficiency: Optional[float] = None
+    plant_availability: Optional[float] = None
+    auxiliary_consumption_pct: Optional[float] = None
+    transmission_loss_pct: Optional[float] = None
+    # Phase 5
+    env_flow_method: Optional[str] = None
+    env_flow_min_pct: Optional[float] = None
+    env_flow_fair_pct: Optional[float] = None
+    env_flow_outstanding_pct: Optional[float] = None
+    protected_area: Optional[bool] = None
+    endangered_species: Optional[bool] = None
+    community_dependency: Optional[bool] = None
+    cultural_heritage: Optional[bool] = None
+    land_area_affected_ha: Optional[float] = None
+    water_rights_affected: Optional[bool] = None
+    esia_notes: Optional[str] = None
+    # Phase 6
+    civil_works_usd: Optional[float] = None
+    electromechanical_usd: Optional[float] = None
+    transmission_km: Optional[float] = None
+    transmission_cost_per_km: Optional[float] = None
+    environmental_social_pct: Optional[float] = None
+    engineering_dev_pct: Optional[float] = None
+    contingency_pct: Optional[float] = None
+    annual_om_pct: Optional[float] = None
+    # Phase 7
+    tariff_usd_kwh: Optional[float] = None
+    discount_rate_pct: Optional[float] = None
+    project_life_years: Optional[int] = None
+    debt_fraction: Optional[float] = None
+    debt_rate_pct: Optional[float] = None
+    debt_term_years: Optional[int] = None
+
+
 class PipelineUpdate(BaseModel):
     priority: Optional[int] = None
     feasibility_status: Optional[str] = None

@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useCallback, useEffect, useMemo, useState } from "react";
+import { use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { api, Project, FDCPoint, SensitivityResult } from "@/lib/api";
 import {
@@ -464,6 +464,11 @@ export default function ProjectPage({
     debt_term_years: "" as string | number,
   });
 
+  // ---- Auto-save state ----
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const initialized = useRef(false);
+  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   // ---- Load project ----
   useEffect(() => {
     let cancelled = false;
@@ -594,7 +599,120 @@ export default function ProjectPage({
     }));
 
     if (proj.sensitivity_results) setSensitivityResults(proj.sensitivity_results);
+    setTimeout(() => { initialized.current = true; }, 100);
   }, []);
+
+  // ---- Auto-save (debounced) ----
+  useEffect(() => {
+    if (!initialized.current) return;
+
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+
+    saveTimeoutRef.current = setTimeout(async () => {
+      const draft: Record<string, unknown> = {};
+      const addNum = (key: string, v: string | number) => {
+        if (v === "" || v == null) return;
+        const n = Number(v);
+        if (!isNaN(n)) draft[key] = n;
+      };
+      const addStr = (key: string, v: string) => {
+        if (v) draft[key] = v;
+      };
+      const addBool = (key: string, v: boolean) => {
+        draft[key] = v;
+      };
+
+      // Phase 1
+      addNum("latitude", p1.latitude);
+      addNum("longitude", p1.longitude);
+      addNum("catchment_area_km2", p1.catchment_area_km2);
+      addStr("project_type", p1.project_type);
+      addStr("capacity_class", p1.capacity_class);
+      addNum("distance_to_load_km", p1.distance_to_load_km);
+      addStr("has_gauge_data", p1.has_gauge_data);
+      addNum("gauge_years", p1.gauge_years);
+
+      // Phase 2
+      addNum("dem_resolution_m", p2.dem_resolution_m);
+      addNum("gross_head_m", p2.gross_head_m);
+      addNum("mean_slope_pct", p2.mean_slope_pct);
+      addNum("elevation_mean_m", p2.elevation_mean_m);
+      addNum("stream_length_km", p2.stream_length_km);
+      addNum("penstock_length_m", p2.penstock_length_m);
+      addNum("aridity_index", p2.aridity_index);
+      addNum("forest_fraction", p2.forest_fraction);
+      addNum("soil_porosity", p2.soil_porosity);
+      addNum("soil_conductivity", p2.soil_conductivity);
+      addNum("geological_permeability", p2.geological_permeability);
+      addNum("carbonate_rock_fraction", p2.carbonate_rock_fraction);
+
+      // Phase 3
+      addStr("lstm_model_approach", p3.lstm_model_approach);
+      addNum("mean_annual_flow_m3s", p3.mean_annual_flow_m3s);
+      addNum("q10_m3s", p3.q10_m3s);
+      addNum("q40_m3s", p3.q40_m3s);
+      addNum("q50_m3s", p3.q50_m3s);
+      addNum("q90_m3s", p3.q90_m3s);
+      addNum("flow_cv", p3.flow_cv);
+      addNum("nse_score", p3.nse_score);
+      addNum("ensemble_size", p3.ensemble_size);
+      addNum("simulation_years", p3.simulation_years);
+
+      // Phase 4
+      addStr("design_flow_exceedance", p4.design_flow_exceedance);
+      addNum("turbine_efficiency", p4.turbine_efficiency);
+      addNum("plant_availability", p4.plant_availability);
+      addNum("auxiliary_consumption_pct", p4.auxiliary_consumption_pct);
+      addNum("transmission_loss_pct", p4.transmission_loss_pct);
+
+      // Phase 5
+      addStr("env_flow_method", p5.env_flow_method);
+      addNum("env_flow_min_pct", p5.env_flow_min_pct);
+      addNum("env_flow_fair_pct", p5.env_flow_fair_pct);
+      addNum("env_flow_outstanding_pct", p5.env_flow_outstanding_pct);
+      addBool("protected_area", p5.protected_area);
+      addBool("endangered_species", p5.endangered_species);
+      addBool("community_dependency", p5.community_dependency);
+      addBool("cultural_heritage", p5.cultural_heritage);
+      addNum("land_area_affected_ha", p5.land_area_affected_ha);
+      addBool("water_rights_affected", p5.water_rights_affected);
+      addStr("esia_notes", p5.esia_notes);
+
+      // Phase 6
+      addNum("civil_works_usd", p6.civil_works_usd);
+      addNum("electromechanical_usd", p6.electromechanical_usd);
+      addNum("transmission_km", p6.transmission_km);
+      addNum("transmission_cost_per_km", p6.transmission_cost_per_km);
+      addNum("environmental_social_pct", p6.environmental_social_pct);
+      addNum("engineering_dev_pct", p6.engineering_dev_pct);
+      addNum("contingency_pct", p6.contingency_pct);
+      addNum("annual_om_pct", p6.annual_om_pct);
+
+      // Phase 7
+      addNum("tariff_usd_kwh", p7.tariff_usd_kwh);
+      addNum("discount_rate_pct", p7.discount_rate_pct);
+      addNum("project_life_years", p7.project_life_years);
+      addNum("debt_fraction", p7.debt_fraction);
+      addNum("debt_rate_pct", p7.debt_rate_pct);
+      addNum("debt_term_years", p7.debt_term_years);
+
+      if (Object.keys(draft).length === 0) return;
+
+      setSaveStatus("saving");
+      try {
+        await api.saveDraft(id, draft);
+        setSaveStatus("saved");
+        setTimeout(() => setSaveStatus((s) => s === "saved" ? "idle" : s), 2000);
+      } catch {
+        setSaveStatus("error");
+      }
+    }, 1500);
+
+    return () => {
+      if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [p1, p2, p3, p4, p5, p6, p7]);
 
   // ---- Computed values ----
   const netHead = useMemo(() => {
@@ -795,6 +913,24 @@ export default function ProjectPage({
               </p>
             </div>
             <div className="flex items-center gap-2">
+              {saveStatus === "saving" && (
+                <span className="flex items-center gap-1.5 text-[10px] sm:text-xs font-medium text-blue-200 animate-pulse">
+                  <span className="h-1.5 w-1.5 rounded-full bg-blue-300 animate-ping" />
+                  Saving...
+                </span>
+              )}
+              {saveStatus === "saved" && (
+                <span className="flex items-center gap-1.5 text-[10px] sm:text-xs font-medium text-teal-300">
+                  <CheckCircle className="h-3 w-3" />
+                  Saved
+                </span>
+              )}
+              {saveStatus === "error" && (
+                <span className="flex items-center gap-1.5 text-[10px] sm:text-xs font-medium text-red-300">
+                  <AlertTriangle className="h-3 w-3" />
+                  Save failed
+                </span>
+              )}
               <Badge
                 variant={project.status === "complete" ? "default" : "secondary"}
                 className={`text-[10px] sm:text-xs ${
