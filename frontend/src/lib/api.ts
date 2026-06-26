@@ -51,6 +51,8 @@ export interface Project {
   fdc_data?: FDCPoint[];
   sensitivity_results?: SensitivityResult[];
   report_generated: boolean;
+  pfs_completed_at?: string;
+  pfs_locked?: boolean;
   priority?: number;
   feasibility_status?: string;
   financial_model_status?: string;

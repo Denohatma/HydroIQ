@@ -10,7 +10,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { Printer, ArrowLeft, CheckCircle, XCircle, AlertTriangle, Download } from "lucide-react";
+import { Printer, ArrowLeft, CheckCircle, XCircle, AlertTriangle, Download, ExternalLink } from "lucide-react";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   BarChart, Bar,
@@ -184,6 +184,12 @@ export default function ReportPage({ params }: { params: Promise<{ id: string }>
             <Button variant="outline" size="sm"><ArrowLeft className="size-4 mr-1.5" /><span className="hidden sm:inline">Back to Project</span><span className="sm:hidden">Back</span></Button>
           </Link>
           <div className="flex gap-2">
+            <Link href="/pipeline">
+              <Button size="sm" variant="outline" className="gap-1.5">
+                <ExternalLink className="size-3.5" />
+                <span className="hidden sm:inline">View in Pipeline</span><span className="sm:hidden">Pipeline</span>
+              </Button>
+            </Link>
             <Button size="sm" className="bg-teal-700 text-white hover:bg-teal-800" onClick={() => window.print()}>
               <Printer className="size-4 mr-1.5" /><span className="hidden sm:inline">Print / Save PDF</span><span className="sm:hidden">PDF</span>
             </Button>

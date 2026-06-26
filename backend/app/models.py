@@ -113,8 +113,10 @@ class Project(Base):
     recommendation = Column(String)  # ADVANCE, CONDITIONAL, DO_NOT_ADVANCE
     sensitivity_results = Column(JSON)
 
-    # Report
+    # Report & PFS Lock
     report_generated = Column(Boolean, default=False)
+    pfs_completed_at = Column(DateTime)
+    pfs_locked = Column(Boolean, default=False)
     current_phase = Column(Integer, default=1)
 
     # Pipeline Tracking

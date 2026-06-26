@@ -231,6 +231,8 @@ class ProjectResponse(BaseModel):
     fdc_data: Optional[list] = None
     sensitivity_results: Optional[list] = None
     report_generated: bool = False
+    pfs_completed_at: Optional[datetime] = None
+    pfs_locked: bool = False
 
     priority: Optional[int] = None
     feasibility_status: Optional[str] = None

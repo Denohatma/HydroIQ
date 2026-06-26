@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+from datetime import datetime, timezone
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -88,6 +89,8 @@ async def draft_save(project_id: int, data: schemas.DraftSave, db: AsyncSession 
     project = await db.get(models.Project, project_id)
     if not project:
         raise HTTPException(404, "Project not found")
+    if project.pfs_locked:
+        raise HTTPException(403, "PFS is locked — project has been moved to the AfCEN Pipeline")
     for key, val in data.model_dump(exclude_none=True).items():
         setattr(project, key, val)
     await db.commit()
@@ -363,6 +366,12 @@ async def save_phase7(project_id: int, data: schemas.Phase7Input, db: AsyncSessi
     project.recommendation = recommendation
     project.sensitivity_results = sensitivity
     project.status = "completed"
+
+    project.pfs_completed_at = datetime.now(timezone.utc)
+    project.pfs_locked = True
+    project.report_generated = True
+    project.feasibility_status = "completed"
+    project.financial_model_status = "completed"
 
     await db.commit()
     await db.refresh(project)

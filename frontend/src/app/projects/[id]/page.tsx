@@ -58,6 +58,8 @@ import {
   AlertTriangle,
   CheckCircle,
   XCircle,
+  Lock,
+  ExternalLink,
 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
@@ -956,6 +958,29 @@ export default function ProjectPage({
             <AlertTriangle className="w-4 h-4" />
             <AlertTitle>Error</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
+        {/* PFS Locked banner */}
+        {project.pfs_locked && (
+          <Alert className="border-teal-300 bg-teal-50">
+            <Lock className="w-4 h-4 text-teal-700" />
+            <AlertTitle className="text-teal-800">PFS Complete — Project in AfCEN Pipeline</AlertTitle>
+            <AlertDescription className="flex flex-col sm:flex-row sm:items-center gap-2">
+              <span className="text-teal-700">
+                This pre-feasibility study was finalized on{" "}
+                {project.pfs_completed_at
+                  ? new Date(project.pfs_completed_at).toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" })
+                  : "—"}
+                . Data is now locked and the project has been moved to the AfCEN Pipeline.
+              </span>
+              <Link
+                href="/pipeline"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-teal-800 hover:text-teal-900 whitespace-nowrap"
+              >
+                View Pipeline <ExternalLink className="w-3.5 h-3.5" />
+              </Link>
+            </AlertDescription>
           </Alert>
         )}
 
@@ -2194,15 +2219,25 @@ export default function ProjectPage({
                 )}
 
                 <Separator />
-                <div className="flex justify-between">
-                  <Button
-                    onClick={handleSavePhase7}
-                    disabled={saving}
-                    className="bg-blue-900 hover:bg-blue-800 text-white gap-2"
-                  >
-                    {saving ? "Saving..." : "Save Results"}
-                    <CheckCircle className="w-4 h-4" />
-                  </Button>
+                <div className="flex flex-wrap justify-between gap-2">
+                  {!project.pfs_locked ? (
+                    <Button
+                      onClick={handleSavePhase7}
+                      disabled={saving}
+                      className="bg-blue-900 hover:bg-blue-800 text-white gap-2"
+                    >
+                      {saving ? "Saving..." : "Finalize & Move to Pipeline"}
+                      <CheckCircle className="w-4 h-4" />
+                    </Button>
+                  ) : (
+                    <Button
+                      className="bg-teal-700 hover:bg-teal-600 text-white gap-2"
+                      render={<Link href="/pipeline" />}
+                    >
+                      <Lock className="w-4 h-4" />
+                      View in AfCEN Pipeline
+                    </Button>
+                  )}
                   <Button
                     className="bg-teal-700 hover:bg-teal-600 text-white gap-2"
                     render={
